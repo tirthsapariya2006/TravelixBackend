@@ -4,6 +4,7 @@ const db = require("./config/db")
 const tourRouter = require("./routes/tourRouter")
 const cartRoutes = require("./routes/cartRoutes");
 const userRoutes = require("./routes/userRoutes");
+const likeRoutes = require("./routes/likeRoutes");
 const cors = require("cors")
 require("dotenv").config(); 
 
@@ -24,6 +25,8 @@ app.use("/api/tour", tourRouter);
 app.use("/api/user", userRoutes);
 
 app.use("/api/cart", cartRoutes);
+
+app.use("/api/like", likeRoutes);
 
 app.listen(3000,() => {
     console.log("http://localhost:3000");

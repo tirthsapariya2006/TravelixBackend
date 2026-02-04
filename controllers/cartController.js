@@ -14,7 +14,7 @@ exports.getCart = async (req, res) => {
 
 exports.addToCart = async (req, res) => {
   try {
-    const { tourId, quantity = 1, setExactQuantity = false } = req.body; // default values
+    const { tourId, quantity = 1, setExactQuantity = false } = req.body;
 
     if (!tourId) return res.status(400).json({ message: "tourId is required" });
 
@@ -36,9 +36,9 @@ exports.addToCart = async (req, res) => {
 
     if (existingItem) {
       if (setExactQuantity) {
-        existingItem.quantity = quantity; // set exact
+        existingItem.quantity = quantity;
       } else {
-        existingItem.quantity += quantity; // add
+        existingItem.quantity += quantity; 
       }
     } else {
       user.cartItems.push({
@@ -53,7 +53,7 @@ exports.addToCart = async (req, res) => {
 
     res.json({ cartItems: user.cartItems });
   } catch (err) {
-    console.error("Add to cart error:", err); // log error
+    console.error("Add to cart error:", err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -100,7 +100,7 @@ exports.updateCartItem = async (req, res) => {
     const item = user.cartItems.find((i) => i.tour.toString() === tourId);
     if (!item) return res.status(404).json({ message: "Cart item not found" });
 
-    item.quantity = quantity; // ← set exact quantity
+    item.quantity = quantity;
 
     await user.save();
     await user.populate("cartItems.tour");
