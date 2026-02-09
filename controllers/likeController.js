@@ -19,16 +19,10 @@ exports.addToLike = async (req, res) => {
     if (!tourId) return res.status(400).json({ message: "tourId is required" });
 
     const tour = await Tour.findById(tourId);
+    
     if (!tour) return res.status(404).json({ message: "Tour not found" });
 
     let user = await User.findOne({ firebaseUid: req.user.uid });
-
-    if (!user) {
-      user = await User.create({
-        firebaseUid: req.user.uid,
-        email: req.user.email,
-      });
-    }
 
     user.likeItems.push({
       tour: tourId,

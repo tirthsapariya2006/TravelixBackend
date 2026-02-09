@@ -1,25 +1,34 @@
+// controllers/userController.js
 const User = require("../models/user");
 
-// Get current user profile
+// GET /api/user/me
 exports.getProfile = async (req, res) => {
   try {
-    // Find user in MongoDB
-    let user = await User.findOne({ firebaseUid: req.user.uid }).populate("cartItems.tour");
+    const user = await User.findOneAndUpdate(
+      { firebaseUid: req.user.uid },
+      {
+        $setOnInsert: {
+          firebaseUid: req.user.uid,
+          email: req.user.email,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    ).populate("cartItems.tour");
 
-    // If not exists, create a new MongoDB user
-    if (!user) {
-      user = await User.create({
-        firebaseUid: req.user.uid,
-        email: req.user.email,
-      });
-    }
-
-    res.json({
+    res.status(200).json({
+      id: user._id,
       firebaseUid: user.firebaseUid,
       email: user.email,
       cartItems: user.cartItems,
+      likeItems: user.likeItems,
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("getProfile error:", err);
+    res.status(500).json({
+      message: "Failed to load user profile",
+    });
   }
 };
